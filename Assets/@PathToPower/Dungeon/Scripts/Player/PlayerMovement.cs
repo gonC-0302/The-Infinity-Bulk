@@ -12,7 +12,7 @@ namespace Dungeon
         private Vector2 _direction;
         [SerializeField] private bool _isJoyStick;
         Rigidbody2D rigidbody2d;
-
+       
         void Start()
         {
             rigidbody2d = GetComponent<Rigidbody2D>();
@@ -35,7 +35,9 @@ namespace Dungeon
             if (_direction.x >= 0) _scale.x = 1;
             else _scale.x = -1;
             transform.localScale = _scale;
+
         }
+
         void FixedUpdate()
         {
             Vector2 position = rigidbody2d.position;
