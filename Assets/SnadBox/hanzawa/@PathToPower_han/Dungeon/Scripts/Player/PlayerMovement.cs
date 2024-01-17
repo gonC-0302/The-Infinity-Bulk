@@ -42,7 +42,7 @@ namespace Dungeon_han
                 _scale.x = 1;
             }
             else _scale.x = -1;
-            transform.localScale = _scale;
+            //transform.localScale = _scale;
         }
 
         void FixedUpdate()
@@ -61,6 +61,9 @@ namespace Dungeon_han
                 _animator.SetBool("Walk", true);
 
             }
+
+            transform.localScale = _scale;
+
         }
 
         //í èÌçUåÇ
