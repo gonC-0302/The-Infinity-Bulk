@@ -223,7 +223,7 @@ namespace Dungeon
                 // ただし、まだ通路がない場合は必ず作る
                 if (!isFirst && RogueUtils.RandomJadge(0.8f))
                 {
-                    //continue;
+                    continue;
                 }
                 else
                 {
