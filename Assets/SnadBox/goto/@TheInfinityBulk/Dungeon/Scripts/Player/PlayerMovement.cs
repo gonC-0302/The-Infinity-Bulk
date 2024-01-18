@@ -10,6 +10,7 @@ namespace Dungeon
         [SerializeField] private VariableJoystick variableJoystick;
         private Vector3 _scale = Vector3.one;
         private Vector2 _direction;
+        public Vector2 Direction => _direction;
         [SerializeField] private bool _isJoyStick;
         Rigidbody2D _rigidbody2d;
         private Animator _anim;
