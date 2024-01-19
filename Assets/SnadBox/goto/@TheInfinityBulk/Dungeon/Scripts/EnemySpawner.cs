@@ -7,12 +7,14 @@ namespace Dungeon
     public class EnemySpawner : MonoBehaviour
     {
         [SerializeField] private GameObject _enemyPrefab;
+        [SerializeField] private Transform _playerTran;
 
         public void SpawnEnemy(int[,] map, int mapSizeX, int mapSizeY)
         {
             for (int i = 0; i < 10; i++)
             {
                 var enemy = Instantiate(_enemyPrefab);
+                enemy.GetComponent<EnemyMovement>().Init(_playerTran);
                 Position position;
                 do
                 {
