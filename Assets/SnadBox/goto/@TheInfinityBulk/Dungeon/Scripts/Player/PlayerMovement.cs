@@ -4,36 +4,36 @@ using UnityEngine;
 
 namespace Dungeon
 {
+    [RequireComponent(typeof(PlayerAnimation))]
     public class PlayerMovement : MonoBehaviour
     {
         [SerializeField] private float _speed = 3f;
         [SerializeField] private VariableJoystick variableJoystick;
         private Vector3 _scale = Vector3.one;
         private Vector2 _direction;
-        public Vector2 Direction => _direction;
+        // 最後に入力した方向
+        private Vector2 _lastDirection;
+        public Vector2 LastDirection => _lastDirection;
         [SerializeField] private bool _isJoyStick;
         Rigidbody2D _rigidbody2d;
-        private Animator _anim;
+        private PlayerAnimation _anim;
        
         void Start()
         {
+            _anim = GetComponent<PlayerAnimation>();
             _rigidbody2d = GetComponent<Rigidbody2D>();
-            _anim = GetComponent<Animator>();
         }
         void Update()
         {
-            // TODO: 攻撃アニメーションが終わるまではボタンを押せないようにする
-            if (Input.GetKeyDown(KeyCode.Space)) _anim.SetTrigger("Attack");
-
             _direction = ReceiveMoveInput();
             if (_direction == Vector2.zero)
             {
-                _anim.SetBool("IsWalking", false);
+                _anim.SwitchMoveAnimation(false);
                 return;
             }
             else
             {
-                _anim.SetBool("IsWalking", true);
+                _anim.SwitchMoveAnimation(true);
             }
             ChangeDirection();
         }
@@ -49,6 +49,12 @@ namespace Dungeon
                 float horizontal = Input.GetAxisRaw("Horizontal");
                 float vertical = Input.GetAxisRaw("Vertical");
                 direction = new Vector2(horizontal, vertical);
+            }
+
+            // 最後に入力した情報を更新
+            if(direction != Vector3.zero)
+            {
+                _lastDirection = direction;
             }
             return direction;
         }
