@@ -4,9 +4,14 @@ using System.Collections.Generic;
 
 namespace Dungeon
 {
-    public class MapGenerator
+    public class MapGenerator : MonoBehaviour
     {
-        private const int MINIMUM_RANGE_WIDTH = 6;
+        [SerializeField] private int MAX_ROOM_NUMBER;
+        [SerializeField] private GameObject floorPrefab;
+        [SerializeField] private GameObject wallPrefab;
+        [SerializeField] private GameObject _stairsPrefab;
+        private int[,] map;
+        private const int MINIMUM_RANGE_WIDTH = 8;
 
         private int mapSizeX;
         private int mapSizeY;
@@ -19,7 +24,52 @@ namespace Dungeon
 
         private bool isGenerated = false;
 
-        public int[,] GenerateMap(int mapSizeX, int mapSizeY, int maxRoom)
+        private void SpawnStaris()
+        {
+            var stairs = Instantiate(_stairsPrefab);
+            Position position;
+            do
+            {
+                var x = RogueUtils.GetRandomInt(0, mapSizeX - 1);
+                var y = RogueUtils.GetRandomInt(0, mapSizeY - 1);
+                position = new Position(x, y);
+            } while (map[position.X, position.Y] != 2);
+            stairs.transform.position = new Vector2(position.X, position.Y);
+        }
+
+        public int[,] GenerateMap(int mapSizeX, int mapSizeY)
+        {
+            map = PreparateGenerateMap(mapSizeX, mapSizeY, MAX_ROOM_NUMBER);
+
+            var floorList = new List<Vector3>();
+            var wallList = new List<Vector3>();
+
+            var floors = new GameObject("Floor");
+            var walls = new GameObject("wall");
+
+            for (int y = 0; y < mapSizeY; y++)
+            {
+                for (int x = 0; x < mapSizeX; x++)
+                {
+                    if (map[x, y] == 1 || map[x, y] == 2)
+                    {
+                        var floor = Instantiate(floorPrefab, new Vector2(x, y), new Quaternion());
+                        floor.transform.SetParent(floors.transform);
+
+                    }
+                    else
+                    {
+                        var wall = Instantiate(wallPrefab, new Vector2(x, y), new Quaternion());
+                        wall.transform.SetParent(walls.transform);
+
+                    }
+                }
+            }
+            SpawnStaris();
+            return map;
+        }
+
+        private int[,] PreparateGenerateMap(int mapSizeX, int mapSizeY, int maxRoom)
         {
             this.mapSizeX = mapSizeX;
             this.mapSizeY = mapSizeY;
@@ -57,7 +107,7 @@ namespace Dungeon
                 {
                     for (int y = room.Start.Y; y <= room.End.Y; y++)
                     {
-                        map[x, y] = 1;
+                        map[x, y] = 2;
                     }
                 }
             }
@@ -223,7 +273,7 @@ namespace Dungeon
                 // ただし、まだ通路がない場合は必ず作る
                 if (!isFirst && RogueUtils.RandomJadge(0.8f))
                 {
-                    continue;
+                    //continue;
                 }
                 else
                 {
