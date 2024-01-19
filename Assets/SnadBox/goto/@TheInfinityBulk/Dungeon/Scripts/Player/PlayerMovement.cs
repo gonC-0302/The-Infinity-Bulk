@@ -15,13 +15,13 @@ namespace Dungeon
         private Vector2 _lastDirection;
         public Vector2 LastDirection => _lastDirection;
         [SerializeField] private bool _isJoyStick;
-        Rigidbody2D _rigidbody2d;
+        Rigidbody2D _rb;
         private PlayerAnimation _anim;
        
         void Start()
         {
             _anim = GetComponent<PlayerAnimation>();
-            _rigidbody2d = GetComponent<Rigidbody2D>();
+            _rb = GetComponent<Rigidbody2D>();
         }
         void Update()
         {
@@ -71,10 +71,10 @@ namespace Dungeon
         }
         private void Move()
         {
-            Vector2 position = _rigidbody2d.position;
+            Vector2 position = _rb.position;
             position.x = position.x + _speed * _direction.x * Time.deltaTime;
             position.y = position.y + _speed * _direction.y * Time.deltaTime;
-            _rigidbody2d.MovePosition(position);
+            _rb.MovePosition(position);
         }
     }
 }
